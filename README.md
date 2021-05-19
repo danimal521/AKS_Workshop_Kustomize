@@ -108,9 +108,19 @@ kubectl get pods -n uat
 ```
 
 ### Summary
-In this step you learned about isolating deployments in their own namespaces. We also show a few ways to display the customized templates, screen and to file. We also deployed the customizations directly to the cluster.
+In this step you learned about isolating deployments in their own namespaces with Kustomize. We also show a few ways to display the customized templates, screen and to file. We also deployed the customizations directly to the cluster.
 
 
 
+## Tutorial: Create production template, namespace and scale
+_(15 minutes)_
 
+
+In this step we will create a production namespace, deploy and scale the base.
+
+
+The basics steps include:
+- Create an overlays directly
+- Create a kustomization.yaml file to contain the changes
+- Deploy to file or cluster
 
