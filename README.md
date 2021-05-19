@@ -73,7 +73,7 @@ kubectl create ns uat
 # You should now see UAT in the list
 kubectl get ns
 
-# Create a directory to hold you base image
+# Create a directory to hold your base image
 MD UAT
 
 # Copy the 01-pod-storage.yaml to this directory. This will be our "base"
@@ -86,6 +86,9 @@ namespace: uat
 
 resources:
   - 01-pod-storage.yaml
+
+
+
 
 # Confirm you are in the root of your project (one directory above the UAT folder)
 # Test/Debug you customization, you should see UAT as the namespace
@@ -120,7 +123,70 @@ In this step we will create a production namespace, deploy and scale the base.
 
 
 The basics steps include:
-- Create an overlays directly
+- Create an overlays directory
 - Create a kustomization.yaml file to contain the changes
 - Deploy to file or cluster
+
+```bash
+# View your current namespaces
+kubectl get ns
+
+# Create a new namespace for UAT
+kubectl create ns production
+
+# View your current namespaces
+# You should now see production in the list
+kubectl get ns
+
+# Create a directory to hold overlays
+MD overlays
+
+# Navigate to the overlays directory
+CD overlays
+
+# Create a Production folder
+MD Production
+
+# Create a new yaml named kustomization.yaml
+bases:
+- ../../uat
+
+namespace: production
+
+patchesStrategicMerge:
+- scale.yaml
+
+
+
+
+# Create a new yaml named scale.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-storage
+spec:
+  replicas: 10
+
+
+
+
+# Navigate back to root
+cd..
+cd..
+
+# Write customizations to screen
+kubectl kustomize overlays/production
+
+# Deploy to cluster
+kubectl apply -k overlays/production
+
+# Look for pods in the Production namespace
+# Pods are now visable and scaled to 10 in the production namespace
+kubectl get pods -n production
+```
+
+### Summary
+In this tutorial, we created a new production overlay and merged in a scale.yaml to scale our cluster. UAT and Production are usually similar but different in scale. kustomize helps keep the namespaces and yamls manageable. 
+
+
 
